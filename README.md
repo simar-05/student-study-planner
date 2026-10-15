@@ -19,3 +19,6 @@ A study planner for managing assignments, deadlines and academic progress.
 
 
 This repository is for my CS361 Student Study Planner Project. 
+
+
+Milestone 1 will focus on adding, viewing, and completing assignments. 
