@@ -249,13 +249,13 @@ def show_add():
     body = frame()
     header(body)
     heading(body, 'Add Assignment')
-    tk.Label(body, text='* Required: assignment title and course name. Due date and priority are optional. About 1 minute to fill out.',
+    tk.Label(body, text='* Required: assignment title, course name, and due date. Priority is optional. About 1 minute to fill out.',
              bg=BG, fg=DARK, font=('Arial', 11), wraplength=850).pack(pady=(0, 18))
     form = tk.Frame(body, bg=BG)
     form.pack()
     fields = {}
     for row, (key, label) in enumerate((('name', 'Assignment Title *'), ('course', 'Course Name *'),
-                                         ('due_date', 'Due Date (YYYY-MM-DD)'),)):
+                                         ('due_date', 'Due Date (YYYY-MM-DD) *'),)):
         tk.Label(form, text=label, bg=BG, fg=DARK, font=('Arial', 12)).grid(row=row, column=0, sticky='w', pady=10, padx=10)
         entry = tk.Entry(form, width=40, bg=WHITE, fg=DARK, insertbackground=DARK, font=('Arial', 12))
         entry.grid(row=row, column=1, pady=10, padx=10)
@@ -277,17 +277,22 @@ def show_add():
         name = fields['name'].get().strip()
         course = fields['course'].get().strip()
         date = fields['due_date'].get().strip()
-        if not name or not course:
-            messagebox.showerror('Missing required fields', 'Assignment title and course name are required.')
+        if not name or not course or not date:
+            messagebox.showerror(
+                'Missing required fields',
+                'Assignment title, course name, and due date are required.'
+            )
             return None
-        if date:
-            try:
-                parsed = datetime.strptime(date, '%Y-%m-%d')
-                if parsed.strftime('%Y-%m-%d') != date:
-                    raise ValueError()
-            except ValueError:
-                messagebox.showerror('Invalid date', 'Use a valid date in YYYY-MM-DD format, or leave it blank.')
-                return None
+        try:
+            parsed = datetime.strptime(date, '%Y-%m-%d')
+            if parsed.strftime('%Y-%m-%d') != date:
+                raise ValueError()
+        except ValueError:
+            messagebox.showerror(
+                'Invalid date',
+                'Please enter a valid date in YYYY-MM-DD format.'
+            )
+            return None
         return {'name': name, 'course': course, 'due_date': date,
                 'priority': priority.get(), 'status': 'Incomplete',
                 'description': instructions.get('1.0', 'end-1c').strip()}
